@@ -1,10 +1,12 @@
-const buttons = document.querySelectorAll('.btn');
+const allButtons = document.querySelectorAll('.btn');
 const topScreen = document.querySelector('#top-screen');
 const mainScreen = document.querySelector('#main-screen');
-const btnNum = document.querySelectorAll('.btn-num');
-const btnDel = document.querySelector('.btn-del');
-const btnOperator = document.querySelectorAll('.btn-operation');
-const btnReset = document.querySelector('.btn-reset');
+const numButtons = document.querySelectorAll('.btn-num');
+const delButton = document.querySelector('.btn-del');
+const operationButtons = document.querySelectorAll('.btn-operation');
+const resetButton = document.querySelector('.btn-reset');
+const equalButton = document.querySelector('.btn-equal');
+const zeroButton = document.querySelector('.btn-zero');
 
 let numTopScreen = '1';
 let numMainScreen = '0';
@@ -29,32 +31,31 @@ function showTopScreen(){
     topScreen.textContent = numTopScreen;
 }
 
-function appendMainScreen(event){
-    const button = event.target;
-    numMainScreen = numMainScreen + button.textContent;
+function appendMainScreen(number){
+    numMainScreen = numMainScreen.toString() + number.toString();
     showMainScreen();
 }
 
-function delMainScreen(){
+function deleteLastNumber(){
     numMainScreen = numMainScreen.slice(0, -1);
     showMainScreen();
 }
 
 function checkNumMainScreenLength(){
     if (numMainScreen.length > 14){
-        btnNum.forEach((button) => {
+        numButtons.forEach((button) => {
             button.disabled = true;
         });
         
-        btnOperator.forEach((button) => {
+        operationButtons.forEach((button) => {
             button.disabled = true;
         });
     }else{
-        btnNum.forEach((button) => {
+        numButtons.forEach((button) => {
             button.disabled = false;
         });
         
-        btnOperator.forEach((button) => {
+        operationButtons.forEach((button) => {
             button.disabled = false;
         })
     }
@@ -69,33 +70,41 @@ function clearScreen(){
 
 ///////////////////////////////////////////////////////////////////////
 
-buttons.forEach((button) => {
+allButtons.forEach((button) => {
     button.addEventListener('mousedown', btnDown);
     button.addEventListener('mouseup', btnUp)
 });
 
-btnNum.forEach((button) => {
+numButtons.forEach((button) => {
+    // if (numMainScreen === '00'){
+    //     zeroButton.addEventListener('click', () => return);
+    // }
+    button.addEventListener('click', function(event){
+        appendMainScreen(button.textContent);
+        checkNumMainScreenLength();
+    });
+});
+
+operationButtons.forEach((button) => {
     button.addEventListener('click', function(event){
         appendMainScreen(event);
         checkNumMainScreenLength();
     });
 });
 
-btnOperator.forEach((button) => {
-    button.addEventListener('click', function(event){
-        appendMainScreen(event);
-        checkNumMainScreenLength();
-    });
-});
-
-btnDel.addEventListener('click', function(){
-    delMainScreen();
+delButton.addEventListener('click', function(){
+    if(numMainScreen.length === 1) return;
+    deleteLastNumber();
     checkNumMainScreenLength();
 });
 
-btnReset.addEventListener('click', function(){
+resetButton.addEventListener('click', function(){
     clearScreen();
     checkNumMainScreenLength();
 });
+
+// zeroButton.addEventListener('click', function(){
+//  if(numMainScreen === '0') return;
+// });
 
 
