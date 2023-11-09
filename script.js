@@ -9,7 +9,7 @@ const equalButton = document.querySelector('.btn-equal');
 const zeroButton = document.querySelector('.btn-zero');
 
 let numTopScreen = '1';
-let numMainScreen = '0';
+let numMainScreen = '';
 showMainScreen();
 
 //////////////////////////////////////////////////////////////////////////////
@@ -24,7 +24,11 @@ function btnUp(event){
 }
 
 function showMainScreen(){
-    mainScreen.textContent = numMainScreen;
+    if (numMainScreen === ''){
+        mainScreen.textContent = 0;
+    }else{
+        mainScreen.textContent = numMainScreen;
+    }
 }
 
 function showTopScreen(){
@@ -63,7 +67,7 @@ function checkNumMainScreenLength(){
 
 function clearScreen(){
     numTopScreen = '';
-    numMainScreen = '0';
+    numMainScreen = '';
     showTopScreen();
     showMainScreen();
 }
@@ -93,7 +97,6 @@ operationButtons.forEach((button) => {
 });
 
 delButton.addEventListener('click', function(){
-    if(numMainScreen.length === 1) return;
     deleteLastNumber();
     checkNumMainScreenLength();
 });
