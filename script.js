@@ -1,12 +1,11 @@
 const allButtons = document.querySelectorAll('.btn');
-const topScreen = document.querySelector('#top-screen');
-const mainScreen = document.querySelector('#main-screen');
-const numButtons = document.querySelectorAll('.btn-num');
-const delButton = document.querySelector('.btn-del');
-const operationButtons = document.querySelectorAll('.btn-operation');
-const resetButton = document.querySelector('.btn-reset');
-const equalButton = document.querySelector('.btn-equal');
-const zeroButton = document.querySelector('.btn-zero');
+const numberButtons = document.querySelectorAll('[data-number]');
+const operationButtons = document.querySelectorAll('[data-operation]');
+const equalsButton = document.querySelector('[data-equals]');
+const resetButton = document.querySelector('[data-reset]');
+const deleteButton = document.querySelector('[data-delete]');
+const topScreenTextElement = document.querySelector('[data-top-screen]');
+const mainScreenTextElement = document.querySelector('[data-main-screen]');
 
 let numTopScreen = '1';
 let numMainScreen = '';
@@ -25,14 +24,14 @@ function btnUp(event){
 
 function showMainScreen(){
     if (numMainScreen === ''){
-        mainScreen.textContent = 0;
+        mainScreenTextElement.textContent = 0;
     }else{
-        mainScreen.textContent = numMainScreen;
+        mainScreenTextElement.textContent = numMainScreen;
     }
 }
 
 function showTopScreen(){
-    topScreen.textContent = numTopScreen;
+    topScreenTextElement.textContent = numTopScreen;
 }
 
 function appendMainScreen(number){
@@ -47,7 +46,7 @@ function deleteLastNumber(){
 
 function checkNumMainScreenLength(){
     if (numMainScreen.length > 14){
-        numButtons.forEach((button) => {
+        numberButtons.forEach((button) => {
             button.disabled = true;
         });
         
@@ -55,7 +54,7 @@ function checkNumMainScreenLength(){
             button.disabled = true;
         });
     }else{
-        numButtons.forEach((button) => {
+        numberButtons.forEach((button) => {
             button.disabled = false;
         });
         
@@ -79,10 +78,7 @@ allButtons.forEach((button) => {
     button.addEventListener('mouseup', btnUp)
 });
 
-numButtons.forEach((button) => {
-    // if (numMainScreen === '00'){
-    //     zeroButton.addEventListener('click', () => return);
-    // }
+numberButtons.forEach((button) => {
     button.addEventListener('click', function(event){
         appendMainScreen(button.textContent);
         checkNumMainScreenLength();
@@ -96,7 +92,7 @@ operationButtons.forEach((button) => {
     });
 });
 
-delButton.addEventListener('click', function(){
+deleteButton.addEventListener('click', function(){
     deleteLastNumber();
     checkNumMainScreenLength();
 });
@@ -106,8 +102,5 @@ resetButton.addEventListener('click', function(){
     checkNumMainScreenLength();
 });
 
-// zeroButton.addEventListener('click', function(){
-//  if(numMainScreen === '0') return;
-// });
 
 
