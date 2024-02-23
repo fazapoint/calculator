@@ -8,7 +8,8 @@ body {
 
 .calculator {
 	background-color: #618264;
-	width: 390px;
+	max-width: 390px;
+	min-width: 280px;
 	height: 510px;
 	margin-top: 50px;
 	margin-left: auto;
