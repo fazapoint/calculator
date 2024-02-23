@@ -130,7 +130,9 @@ function btnUp(event){
 
 allButtons.forEach((button) => {
     button.addEventListener('mousedown', btnDown);
-    button.addEventListener('mouseup', btnUp)
+    button.addEventListener('mouseup', btnUp);
+    button.addEventListener('touchstart', btnDown);
+    button.addEventListener('touchend', btnUp);
 });
 
 
