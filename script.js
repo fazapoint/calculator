@@ -1,3 +1,78 @@
+class Calculator {
+    constructor(topScreenTextElement, mainScreenTextElement){
+        this.topScreenTextElement = topScreenTextElement;
+        this.mainScreenTextElement = mainScreenTextElement;
+        this.reset();
+        this.updateScreen();
+    }
+
+    reset() {
+        this.topScreenNumber = '';
+        this.mainScreenNumber = '';
+        this.operation = undefined;
+    }
+
+    delete() {
+        this.mainScreenNumber = this.mainScreenNumber.toString().slice(0, -1);
+    }
+
+    appendNumber(number) {
+        if (number === '.' && this.mainScreenNumber.includes('.')) return
+        this.mainScreenNumber = this.mainScreenNumber.toString() + number.toString();
+    }
+
+    chooseOperation(operation) {
+        if (this.mainScreenNumber === '') return
+        if (this.mainScreenNumber !== '') {
+            this.compute();
+        }
+        this.operation = operation;
+        this.topScreenNumber = this.mainScreenNumber.toString() + " " + operation;
+        this.mainScreenNumber = '';
+    }
+
+    compute() {
+        let computation;
+        const prev = parseFloat(this.topScreenNumber);
+        const current = parseFloat(this.mainScreenNumber);
+        if (isNaN(prev) || isNaN(current)) return
+
+        switch (this.operation) {
+            case '+':
+                computation = prev + current;
+                break;
+            case '-':
+                computation = prev - current;
+                break;
+            case 'x':
+                computation = prev * current;
+                break;
+            case '/':
+                computation = prev / current;
+                break;
+            default:
+                return
+        }
+        this.mainScreenNumber = computation;
+        this.operation = undefined;
+        this.topScreenNumber = '';
+    }
+
+    updateScreen() {
+        if (this.mainScreenNumber === '' && this.topScreenNumber === '') {
+            this.mainScreenTextElement.innerText = '0';
+            this.topScreenTextElement.innerText = this.topScreenNumber;
+        } else {
+            this.mainScreenTextElement.innerText = this.mainScreenNumber;
+            this.topScreenTextElement.innerText = this.topScreenNumber;
+        }
+    }
+
+}
+
+
+///////////////////////////////////////////////////////////////////////
+
 const allButtons = document.querySelectorAll('.btn');
 const numberButtons = document.querySelectorAll('[data-number]');
 const operationButtons = document.querySelectorAll('[data-operation]');
@@ -7,100 +82,72 @@ const deleteButton = document.querySelector('[data-delete]');
 const topScreenTextElement = document.querySelector('[data-top-screen]');
 const mainScreenTextElement = document.querySelector('[data-main-screen]');
 
-let numTopScreen = '1';
-let numMainScreen = '';
-showMainScreen();
-
-//////////////////////////////////////////////////////////////////////////////
-function btnDown(event){
-    const button = event.target;
-    button.style.transform = 'translateY(2px)';
-}
-
-function btnUp(event){
-    const button = event.target;
-    button.style.transform = 'translateY(0px)';
-}
-
-function showMainScreen(){
-    if (numMainScreen === ''){
-        mainScreenTextElement.textContent = 0;
-    }else{
-        mainScreenTextElement.textContent = numMainScreen;
-    }
-}
-
-function showTopScreen(){
-    topScreenTextElement.textContent = numTopScreen;
-}
-
-function appendMainScreen(number){
-    numMainScreen = numMainScreen.toString() + number.toString();
-    showMainScreen();
-}
-
-function deleteLastNumber(){
-    numMainScreen = numMainScreen.slice(0, -1);
-    showMainScreen();
-}
-
-function checkNumMainScreenLength(){
-    if (numMainScreen.length > 14){
-        numberButtons.forEach((button) => {
-            button.disabled = true;
-        });
-        
-        operationButtons.forEach((button) => {
-            button.disabled = true;
-        });
-    }else{
-        numberButtons.forEach((button) => {
-            button.disabled = false;
-        });
-        
-        operationButtons.forEach((button) => {
-            button.disabled = false;
-        })
-    }
-}
-
-function clearScreen(){
-    numTopScreen = '';
-    numMainScreen = '';
-    showTopScreen();
-    showMainScreen();
-}
-
 ///////////////////////////////////////////////////////////////////////
 
-allButtons.forEach((button) => {
-    button.addEventListener('mousedown', btnDown);
-    button.addEventListener('mouseup', btnUp)
-});
+const calculator = new Calculator(topScreenTextElement, mainScreenTextElement);
 
-numberButtons.forEach((button) => {
-    button.addEventListener('click', function(event){
-        appendMainScreen(button.textContent);
-        checkNumMainScreenLength();
+numberButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        calculator.appendNumber(button.innerText);
+        calculator.updateScreen();
     });
 });
 
-operationButtons.forEach((button) => {
-    button.addEventListener('click', function(event){
-        appendMainScreen(event);
-        checkNumMainScreenLength();
+operationButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        calculator.chooseOperation(button.innerText);
+        calculator.updateScreen();
     });
 });
 
-deleteButton.addEventListener('click', function(){
-    deleteLastNumber();
-    checkNumMainScreenLength();
+resetButton.addEventListener('click', () => {
+    calculator.reset();
+    calculator.updateScreen();
 });
 
-resetButton.addEventListener('click', function(){
-    clearScreen();
-    checkNumMainScreenLength();
+equalsButton.addEventListener('click', () => {
+    calculator.compute();
+    calculator.updateScreen();
+})
+
+deleteButton.addEventListener('click', () => {
+    calculator.delete();
+    calculator.updateScreen();
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
